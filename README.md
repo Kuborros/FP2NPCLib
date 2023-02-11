@@ -17,6 +17,11 @@ registerNPC(string uID, string Name, string Scene, GameObject Prefab, int Specie
 - (Optional) Home - ID of location listed as 'Home' of your character.
 - (Very, very recommended) DialogueTopics - Amount of dialogue topics your character has. Needs to be equal or higher to amount set in the Prefab. Fallback default will set a single dialogue if not defined, as it is required for minimal function.
 
+To ensure your mod doesnt load without the lib you can add a bepinex dependency:
+```c#
+    [BepInDependency("000.kuborro.plugins.fp2.npclib")]
+``` 
+
 ## Internal ID's
 
 Species ID's are as follows:
