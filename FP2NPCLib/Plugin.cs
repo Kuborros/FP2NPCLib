@@ -31,14 +31,12 @@ namespace FP2NPCLib
         {
             if (!HubNPCs.ContainsKey(uID))
             {
-                //Logger.LogInfo("Registering new NPC: " + Name + "(" + uID + ")");
                 HubNPC npc = new HubNPC(uID, Name, Scene, Prefab, Species, Home, DialogueTopics);
                 HubNPCs.Add(uID, npc);
                 return true;
             }
             else if (HubNPCs.ContainsKey(uID) && HubNPCs[uID].Prefab == null)
             {
-                //Logger.LogInfo("Registering stored NPC: " + Name + "(" + uID + ")");
                 HubNPC npc = new HubNPC(uID, Name, Scene, Prefab, Species, Home, DialogueTopics);
                 npc.ID = HubNPCs[uID].ID;
                 HubNPCs[uID] = npc;
@@ -59,7 +57,7 @@ namespace FP2NPCLib
                 if (js.EndsWith(".json"))
                 {
                     NPCData data = NPCData.LoadFromJson(File.ReadAllText(js));
-                    Logger.LogInfo("Loaded NPC from storage: " + data.UID);
+                    Logger.LogDebug("Loaded NPC from storage: " + data.name + "(" + data.UID + ")");
                     if (!HubNPCs.ContainsKey(data.UID))
                     {
                         HubNPC npc = new HubNPC(data.UID,data.name,data.runtimeID);
@@ -109,7 +107,7 @@ namespace FP2NPCLib
                     ___npcNames = ___npcNames.AddRangeToArray(new string[(npc.ID + 1) - ___npcNames.Length]);
                 }
 
-                if (npc.ID != 0 && npc.ID <= ___npcNames.Length)
+                if (npc.ID != 0)
                 {
                     ___npcNames[npc.ID] = npc.getNpcString();
                 }
@@ -137,7 +135,7 @@ namespace FP2NPCLib
                     FPSaveManager.npcDialogHistory[npc.ID].dialog = new bool[npc.DialogueTopics];
                 }
             }
-            FP2NPCLib.writeToStorage();          
+            FP2NPCLib.writeToStorage();
         }
     }
 
@@ -147,6 +145,7 @@ namespace FP2NPCLib
         [HarmonyPatch(typeof(FPPlayer), "Start", MethodType.Normal)]
         static void Postfix()
         {
+
             string stageName = FPStage.stageNameString;
 
             foreach (HubNPC npc in FP2NPCLib.HubNPCs.Values)

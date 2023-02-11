@@ -5,9 +5,9 @@ namespace FP2NPCLib
     [System.Serializable]
     internal class NPCData
     {
-        internal string UID;
-        internal int runtimeID;
-        internal string name;
+        public string UID;
+        public int runtimeID;
+        public string name;
 
         internal NPCData(string uid,int runtimeID,string name)
         {
