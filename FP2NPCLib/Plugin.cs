@@ -23,6 +23,9 @@ namespace FP2NPCLib
 
             var harmony = new Harmony("000.kuborro.plugins.fp2.npclib");
             harmony.PatchAll(typeof(PatchNPCList));
+
+            registerNPC("com.kuborros.kubo", "Kubo-test", "Nowhere", null);
+
         }
         public bool registerNPC(string uID, string Name, string Scene, GameObject Prefab, int Species = 0, int Home = 0, int DialogueTopics = 1)
         {
@@ -52,7 +55,7 @@ namespace FP2NPCLib
                 if (js.EndsWith(".json"))
                 {
                     NPCData data = NPCData.LoadFromJson(js);
-
+                    Logger.LogInfo("Loaded NPC from storage: " + data.UID);
                     if (!HubNPCs.ContainsKey(data.UID))
                     {
                         HubNPC npc = new HubNPC(data.UID,data.name,data.runtimeID);
