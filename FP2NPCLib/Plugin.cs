@@ -62,28 +62,32 @@ namespace FP2NPCLib
             }
         }
 
-        private void writeToStorage()
+        public static void writeToStorage()
         {
             foreach(HubNPC npc in HubNPCs.Values)
             {
                 String json = npc.GetNPCData().WriteToJson();
 
-                byte[] bytes = new UTF8Encoding().GetBytes(json);
-                using (FileStream fileStream = new FileStream(string.Concat(new object[]
+                try {
+                    byte[] bytes = new UTF8Encoding().GetBytes(json);
+                    using (FileStream fileStream = new FileStream(string.Concat(new object[]
+                    {
+                    storePath,
+                    "/",
+                    npc.UID,
+                    ".json"
+                    }), FileMode.Create, FileAccess.Write, FileShare.Read, bytes.Length, FileOptions.WriteThrough))
+                    {
+                        fileStream.Write(bytes, 0, bytes.Length);
+                        fileStream.Flush();
+                    }
+                } 
+                catch(Exception e)
                 {
-                storePath,
-                "/",
-                npc.UID,
-                ".json"
-                }), FileMode.Create, FileAccess.Write, FileShare.Read, bytes.Length, FileOptions.WriteThrough))
-                {
-                    fileStream.Write(bytes, 0, bytes.Length);
-                    fileStream.Flush();
+                    Debug.LogError(e);
                 }
             }
-
         }
-
     }
     class PatchNPCList
     {
@@ -116,6 +120,7 @@ namespace FP2NPCLib
                     FPSaveManager.npcDialogHistory[npc.ID].dialog = new bool[npc.DialogueTopics];
                 }
             }
+            FP2NPCLib.writeToStorage();          
         }
     }
 

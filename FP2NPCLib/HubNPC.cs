@@ -14,7 +14,7 @@ namespace FP2NPCLib
         public int Species;
         public int Home;
         public int ID;
-        public int DialogueTopics;
+        public int DialogueTopics = 1;
         public GameObject Prefab;
         public GameObject RuntimeObject;
 
