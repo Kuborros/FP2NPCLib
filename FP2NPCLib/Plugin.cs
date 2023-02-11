@@ -23,29 +23,33 @@ namespace FP2NPCLib
 
             var harmony = new Harmony("000.kuborro.plugins.fp2.npclib");
             harmony.PatchAll(typeof(PatchNPCList));
-
-            registerNPC("com.kuborros.kubo", "Kubo-test", "Nowhere", null);
+            harmony.PatchAll(typeof(PatchInstanceNPC));
+            harmony.PatchAll(typeof(PatchStageRegisterNPC));
 
         }
-        public bool registerNPC(string uID, string Name, string Scene, GameObject Prefab, int Species = 0, int Home = 0, int DialogueTopics = 1)
+        public static bool registerNPC(string uID, string Name, string Scene, GameObject Prefab, int Species = 0, int Home = 0, int DialogueTopics = 1)
         {
             if (!HubNPCs.ContainsKey(uID))
             {
-                HubNPC npc = new HubNPC(uID, Name, Scene, Prefab, Species, Home);
+                //Logger.LogInfo("Registering new NPC: " + Name + "(" + uID + ")");
+                HubNPC npc = new HubNPC(uID, Name, Scene, Prefab, Species, Home, DialogueTopics);
                 HubNPCs.Add(uID, npc);
                 return true;
             }
-            else if (HubNPCs.ContainsKey(uID) && HubNPCs[uID] == null)
+            else if (HubNPCs.ContainsKey(uID) && HubNPCs[uID].Prefab == null)
             {
-                HubNPC npc = new HubNPC(uID, Name, Scene, Prefab, Species, Home);
+                //Logger.LogInfo("Registering stored NPC: " + Name + "(" + uID + ")");
+                HubNPC npc = new HubNPC(uID, Name, Scene, Prefab, Species, Home, DialogueTopics);
+                npc.ID = HubNPCs[uID].ID;
                 HubNPCs[uID] = npc;
                 return true;
             }
             else return false;
         }
 
-        private void loadEZJson()
+        public HubNPC getNPCByUID(string UID)
         {
+            return HubNPCs[UID];
         }
 
         private void loadFromStorage()
@@ -54,7 +58,7 @@ namespace FP2NPCLib
             {
                 if (js.EndsWith(".json"))
                 {
-                    NPCData data = NPCData.LoadFromJson(js);
+                    NPCData data = NPCData.LoadFromJson(File.ReadAllText(js));
                     Logger.LogInfo("Loaded NPC from storage: " + data.UID);
                     if (!HubNPCs.ContainsKey(data.UID))
                     {
@@ -65,7 +69,7 @@ namespace FP2NPCLib
             }
         }
 
-        public static void writeToStorage()
+        internal static void writeToStorage()
         {
             foreach(HubNPC npc in HubNPCs.Values)
             {
@@ -100,7 +104,17 @@ namespace FP2NPCLib
         {
             foreach (HubNPC npc in FP2NPCLib.HubNPCs.Values)
             {
-                if (!(___npcNames.Contains(npc.getNpcString())))
+                if (npc.ID >= ___npcNames.Length)
+                {
+                    ___npcNames = ___npcNames.AddRangeToArray(new string[(npc.ID + 1) - ___npcNames.Length]);
+                }
+
+                if (npc.ID != 0 && npc.ID <= ___npcNames.Length)
+                {
+                    ___npcNames[npc.ID] = npc.getNpcString();
+                }
+
+                if (npc.ID == 0 && !(___npcNames.Contains(npc.getNpcString())))
                 {
                     ___npcNames = ___npcNames.AddToArray(npc.getNpcString());
                 }
@@ -140,6 +154,23 @@ namespace FP2NPCLib
                 if (npc.HomeScene == stageName)
                 {
                     npc.RuntimeObject = GameObject.Instantiate(npc.Prefab);
+                }
+                else npc.RuntimeObject = null;
+            }
+        }
+    }
+
+    class PatchStageRegisterNPC
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(FPStage), "UpdateObjectActivation", MethodType.Normal)]
+        static void Postfix()
+        {
+            foreach (HubNPC npc in FP2NPCLib.HubNPCs.Values)
+            {
+                if (npc.RuntimeObject != null)
+                {
+                    FPStage.ValidateStageListPos(npc.RuntimeObject.GetComponent<FPHubNPC>());
                 }
             }
         }

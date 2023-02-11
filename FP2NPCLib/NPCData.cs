@@ -5,23 +5,23 @@ namespace FP2NPCLib
     [System.Serializable]
     internal class NPCData
     {
-        public string UID;
-        public int runtimeID;
-        public string name;
+        internal string UID;
+        internal int runtimeID;
+        internal string name;
 
-        public NPCData(string uid,int runtimeID,string name)
+        internal NPCData(string uid,int runtimeID,string name)
         {
             this.UID = uid;
             this.runtimeID = runtimeID;
             this.name = name;
         }
 
-        public static NPCData LoadFromJson(string json)
+        internal static NPCData LoadFromJson(string json)
         {
             return JsonUtility.FromJson<NPCData>(json);
         }
 
-        public string WriteToJson() 
+        internal string WriteToJson() 
         {
             return JsonUtility.ToJson(this,true);
         }

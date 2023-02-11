@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace FP2NPCLib
 {
-    internal class HubNPC
+    public class HubNPC
     {
         public bool registered = false;
         public string UID;
@@ -39,7 +39,7 @@ namespace FP2NPCLib
 
         internal string getNpcString()
         {
-            return string.Format("{0} {1} {2}",Species,Home,Name);
+            return string.Format("{0} {1} {2}",Species.ToString("D2"),Home.ToString("D2"), Name);
         }
 
         internal NPCData GetNPCData()
