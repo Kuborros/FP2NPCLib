@@ -6,7 +6,11 @@ A library for easy creation of NPC mods. It handles hooking into Savefile data, 
 
 An NPC can be registered by calling:
 ```c#
-registerNPC(string uID, string Name, string Scene, GameObject Prefab, int Species = 0, int Home = 0, int DialogueTopics = 1)
+registerNPC(string uID, string Name, string Scene, GameObject Prefab, int Species, int Home, int DialogueTopics)
+```
+or:
+```c#
+registerNPC(string uID, string Name, string Scene, GameObject Prefab, FPCharacterSpecies Species, FPCharacterHome Home, int DialogueTopics)
 ```
 
 - uID - Your unique identifier for character. It's used internally to properly match character data between restarts. Set it to something unique.
@@ -24,7 +28,7 @@ To ensure your mod doesnt load without the lib you can add a bepinex dependency:
 
 ## Internal ID's
 
-For both ID's convenient enums are provided. You can use numeric values if you prefer so, listed below:
+For both ID's convenient enums (``FPCharacterSpecies`` and ``FPCharacterHome``) are provided. You can use numeric values if you prefer so, listed below:
 
 Species ID's are as follows:
 ```
