@@ -24,9 +24,11 @@ To ensure your mod doesnt load without the lib you can add a bepinex dependency:
 
 ## Internal ID's
 
+For both ID's convenient enums are provided. You can use numeric values if you prefer so, listed below:
+
 Species ID's are as follows:
 ```
-0 (default/fallback): "???"
+0 (default/fallback): "Unknown"
 1: "Cat"
 2: "Bird"
 3: "Bear"
@@ -55,7 +57,7 @@ Number 19 is missing within the game's code, and is therefore an invalid ID.
 
 Home ID's are:
 ```
-0 (default/fallback): "???"
+0 (default/fallback): "Unknown"
 1: "Shang Tu"
 2: "Shang Mu"
 3: "Shuigang"
