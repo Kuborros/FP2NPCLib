@@ -1,5 +1,7 @@
 # FP2NPCLib
 
+# DEPRECATED in favor of [FP2Lib](https://github.com/Kuborros/FP2Lib)
+
 A library for easy creation of NPC mods. It handles hooking into Savefile data, as well as instancing your NPC in desired level.
 
 ## Usage:
